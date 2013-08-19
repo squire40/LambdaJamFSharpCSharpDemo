@@ -29,7 +29,7 @@ namespace LambdaJamFSharpCSharpDemo
             public string[] medical_conditions { get; set; }
             public string height { get; set; }
             public string weight { get; set; }
-            public int limit { get; set; }
+            //public int limit { get; set; }
             public string ToJsonString()
             {
                 return "[" + JsonConvert.SerializeObject(this, Formatting.Indented) + "]\n";
@@ -39,9 +39,34 @@ namespace LambdaJamFSharpCSharpDemo
         [Serializable]
         class FictionalCharacterContainer
         {
-            public List<FictionalCharacter> result { get; set; }
+            private List<FictionalCharacter> _result;
+            public List<FictionalCharacter> result 
+            { 
+                get
+                {
+                    if (_result == null)
+	                {
+		                    _result = new List<FictionalCharacter>();
+	                }
+                    return _result;
+                }
+            
+                set
+                {
+                    _result = value;
+                }
+            }
+            public FictionalCharacterContainer()
+            {
+                _result = new List<FictionalCharacter>();
+            }
         }
 
+        class FreeBaseReturn
+        {
+            public List<FictionalCharacter> result { get; set; }
+            public string cursor { get; set; }
+        }
         static void Main(string[] args)
         {
             var client = new RestClient();
@@ -57,17 +82,28 @@ namespace LambdaJamFSharpCSharpDemo
                 married_to = new string[0],
                 romantically_involved_with = new string[0],
                 powers_or_abilities = new string[0],
-                medical_conditions = new string[0],
-                limit = 10
+                medical_conditions = new string[0]
             };
 
             request.AddParameter("query", input.ToJsonString());
             //request.AddParameter("limit", 10);
-            //request.AddParameter("cursor", "");
+            request.AddParameter("cursor", string.Empty);
             request.RequestFormat = DataFormat.Json;
-            RestResponse response = (RestResponse)client.Execute(request);
-
-            var data = JsonConvert.DeserializeObject<FictionalCharacterContainer>(response.Content);
+            var data = new FictionalCharacterContainer();
+            string cursor = "";
+            RestResponse response = null;
+            while (cursor.ToLower() != "false")
+            {
+                response = (RestResponse)client.Execute(request);
+                //var retVal = JsonConvert.DeserializeObject<FictionalCharacterContainer>(response.Content);
+                var retVal = JsonConvert.DeserializeObject<FreeBaseReturn>(response.Content);
+                //FreeBaseReturn
+                data.result.AddRange(retVal.result);
+                cursor = retVal.cursor;
+                Console.WriteLine(cursor);
+                //request.AddParameter("cursor", cursor);
+                request.Parameters[2].Value = cursor;
+            }
             //var result = data.result.OrderBy(r => r.name).ToList();
             //var heroes = data.result.Where(d => d.powers_or_abilities.Count() > 0).ToList();
 
