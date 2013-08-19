@@ -19,48 +19,48 @@ namespace LambdaJamFSharpCSharpDemo
             public string type { get; set; }
             public string name { get; set; }
             public string[] character_created_by { get; set; }
-            public string gender { get; set; }
+            public string[] gender { get; set; }
             public string[] occupation { get; set; }
             public string[] species { get; set; }
-            public string ethnicity { get; set; }
+            public string[] ethnicity { get; set; }
             public string[] married_to { get; set; }
             public string[] romantically_involved_with { get; set; }
             public string[] powers_or_abilities { get; set; }
             public string[] medical_conditions { get; set; }
             public string height { get; set; }
             public string weight { get; set; }
-            //public int limit { get; set; }
+            public string[] appears_in_these_fictional_universes { get; set; }
             public string ToJsonString()
             {
                 return "[" + JsonConvert.SerializeObject(this, Formatting.Indented) + "]\n";
             }
         }
 
-        [Serializable]
-        class FictionalCharacterContainer
-        {
-            private List<FictionalCharacter> _result;
-            public List<FictionalCharacter> result 
-            { 
-                get
-                {
-                    if (_result == null)
-	                {
-		                    _result = new List<FictionalCharacter>();
-	                }
-                    return _result;
-                }
-            
-                set
-                {
-                    _result = value;
-                }
-            }
-            public FictionalCharacterContainer()
+            class FictionalCharacterContainer
             {
-                _result = new List<FictionalCharacter>();
+                //private List<FictionalCharacter> _result;
+                //public List<FictionalCharacter> result
+                //{
+                //    get
+                //    {
+                //        if (_result == null)
+                //        {
+                //            _result = new List<FictionalCharacter>();
+                //        }
+                //        return _result;
+                //    }
+
+                //    set
+                //    {
+                //        _result = value;
+                //    }
+                //}
+                public List<FictionalCharacter> result { get; set; }
+                public FictionalCharacterContainer()
+                {
+                    result = new List<FictionalCharacter>();
+                }
             }
-        }
 
         class FreeBaseReturn
         {
@@ -77,16 +77,18 @@ namespace LambdaJamFSharpCSharpDemo
             {
                 type = "/fictional_universe/fictional_character",
                 character_created_by = new string[0],
+                gender = new string[0],
                 occupation = new string[0],
                 species = new string[0],
+                ethnicity = new string[0],
                 married_to = new string[0],
                 romantically_involved_with = new string[0],
                 powers_or_abilities = new string[0],
-                medical_conditions = new string[0]
+                medical_conditions = new string[0],
+                appears_in_these_fictional_universes = new string[0]
             };
 
             request.AddParameter("query", input.ToJsonString());
-            //request.AddParameter("limit", 10);
             request.AddParameter("cursor", string.Empty);
             request.RequestFormat = DataFormat.Json;
             var data = new FictionalCharacterContainer();
@@ -95,19 +97,30 @@ namespace LambdaJamFSharpCSharpDemo
             while (cursor.ToLower() != "false")
             {
                 response = (RestResponse)client.Execute(request);
-                //var retVal = JsonConvert.DeserializeObject<FictionalCharacterContainer>(response.Content);
                 var retVal = JsonConvert.DeserializeObject<FreeBaseReturn>(response.Content);
-                //FreeBaseReturn
-                data.result.AddRange(retVal.result);
+                if(retVal.result != null)
+                    data.result.AddRange(retVal.result);
+                if (data.result.Count > 1000)
+                    break;
                 cursor = retVal.cursor;
-                Console.WriteLine(cursor);
-                //request.AddParameter("cursor", cursor);
                 request.Parameters[2].Value = cursor;
             }
             //var result = data.result.OrderBy(r => r.name).ToList();
-            //var heroes = data.result.Where(d => d.powers_or_abilities.Count() > 0).ToList();
+            var heroes = data
+                        .result
+                        .Where(d => d.powers_or_abilities.Count() > 0)
+                        .Select(x => new { x.name, x.powers_or_abilities })
+                        .ToList();
+            var universes = data
+                            .result
+                            .Where(x => x.appears_in_these_fictional_universes.Count() > 0)
+                            .Select(x => string.Join(", ", x.appears_in_these_fictional_universes))
+                            .GroupBy(
+                            .ToList();
 
-            Console.WriteLine("My output :" + "\n" + response.Content);
+            var powers = data.result.Where(x => x.powers_or_abilities.Count() > 0).Select(x => string.Join(", ", x.powers_or_abilities)).ToList();
+            //Console.WriteLine("My output :" + "\n" + response.Content);
+            //Console.WriteLine("My output :" + "\n" + JsonConvert.SerializeObject(data.result, Formatting.Indented));
             Console.ReadKey();
         }
     }
