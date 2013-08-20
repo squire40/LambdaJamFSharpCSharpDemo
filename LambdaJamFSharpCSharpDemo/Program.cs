@@ -27,8 +27,6 @@ namespace LambdaJamFSharpCSharpDemo
             public string[] romantically_involved_with { get; set; }
             public string[] powers_or_abilities { get; set; }
             public string[] medical_conditions { get; set; }
-            public string height { get; set; }
-            public string weight { get; set; }
             public string appears_in_these_fictional_universes { get; set; }
             public string ToJsonString()
             {
@@ -36,14 +34,14 @@ namespace LambdaJamFSharpCSharpDemo
             }
         }
 
-            class FictionalCharacterContainer
+        class FictionalCharacterContainer
+        {
+            public List<FictionalCharacter> result { get; set; }
+            public FictionalCharacterContainer()
             {
-                public List<FictionalCharacter> result { get; set; }
-                public FictionalCharacterContainer()
-                {
-                    result = new List<FictionalCharacter>();
-                }
+                result = new List<FictionalCharacter>();
             }
+        }
 
         class FreeBaseReturn
         {
@@ -84,7 +82,7 @@ namespace LambdaJamFSharpCSharpDemo
                 response = (RestResponse)client.Execute(request);
                 hits++;
                 var retVal = JsonConvert.DeserializeObject<FreeBaseReturn>(response.Content);
-                if(retVal.result != null)
+                if (retVal.result != null)
                     data.result.AddRange(retVal.result);
                 if (data.result.Count > 10000)
                     break;
@@ -95,10 +93,9 @@ namespace LambdaJamFSharpCSharpDemo
             var heroes = data
                         .result
                         .Where(d => d.powers_or_abilities.Count() > 0)
-                        .Select(x => new { Name=x.name, Powers=string.Join(", ", x.powers_or_abilities), Gender=string.Join(", ", x.gender) })
+                        .Select(x => new { Name = x.name, Powers = string.Join(", ", x.powers_or_abilities), Gender = string.Join(", ", x.gender) })
                         .OrderBy(x => x.Name)
                         .ToList();
-
 
             var powers = data
                         .result
@@ -107,18 +104,26 @@ namespace LambdaJamFSharpCSharpDemo
                         .Distinct()
                         .OrderBy(x => x)
                         .ToList();
-            var powersByCount =
-                    data
-                    .result
-                    .Where(x => x.powers_or_abilities.Count() > 0)
-                    .Join(powers,
-                            h => string.Join(", ", h.powers_or_abilities),
-                            p => p,
-                            (h, p) => new { Power = p })
-                    .Select(r => new { Power=r.Power, Count=r.Power.Count() })
-                    .Distinct()
-                    .OrderByDescending(r => r.Count)
-                    .ToList();
+
+            var powersByCount = (from x in data.result
+                                 from p in powers
+                                 where x.powers_or_abilities.Count() > 0
+                                 where string.Join(", ", x.powers_or_abilities).Contains(p)
+                                 group x by new { Power = p } into grp
+                                 select new { Power = grp.Key.Power, Count = grp.Count() }).OrderByDescending(r => r.Count).ToList();
+            var ethnicity = data.result.Where(x => x.ethnicity.Count() > 0).SelectMany(x => x.ethnicity).Distinct().OrderByDescending(x => x).ToList();
+
+            var heroesWithEthnicity = data.result
+                                        .Where(x => x.ethnicity.Count() > 0)
+                                        .Select(x => new { Name = x.name, Ethnicity = string.Join(", ", x.ethnicity) })
+                                        .OrderBy(x => x.Name)
+                                        .ToList();
+
+            var heroesWithOccupation = data.result
+                            .Where(x => x.occupation.Count() > 0)
+                            .Select(x => new { Name = x.name, Occupation = string.Join(", ", x.occupation) })
+                            .OrderBy(x => x.Name)
+                            .ToList();
             Console.ReadKey();
         }
     }
