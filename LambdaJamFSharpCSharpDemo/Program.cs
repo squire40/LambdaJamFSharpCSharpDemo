@@ -29,7 +29,7 @@ namespace LambdaJamFSharpCSharpDemo
             public string[] medical_conditions { get; set; }
             public string height { get; set; }
             public string weight { get; set; }
-            public string[] appears_in_these_fictional_universes { get; set; }
+            public string appears_in_these_fictional_universes { get; set; }
             public string ToJsonString()
             {
                 return "[" + JsonConvert.SerializeObject(this, Formatting.Indented) + "]\n";
@@ -38,23 +38,6 @@ namespace LambdaJamFSharpCSharpDemo
 
             class FictionalCharacterContainer
             {
-                //private List<FictionalCharacter> _result;
-                //public List<FictionalCharacter> result
-                //{
-                //    get
-                //    {
-                //        if (_result == null)
-                //        {
-                //            _result = new List<FictionalCharacter>();
-                //        }
-                //        return _result;
-                //    }
-
-                //    set
-                //    {
-                //        _result = value;
-                //    }
-                //}
                 public List<FictionalCharacter> result { get; set; }
                 public FictionalCharacterContainer()
                 {
@@ -85,7 +68,8 @@ namespace LambdaJamFSharpCSharpDemo
                 romantically_involved_with = new string[0],
                 powers_or_abilities = new string[0],
                 medical_conditions = new string[0],
-                appears_in_these_fictional_universes = new string[0]
+                appears_in_these_fictional_universes = "Marvel Universe"
+
             };
 
             request.AddParameter("query", input.ToJsonString());
@@ -94,33 +78,47 @@ namespace LambdaJamFSharpCSharpDemo
             var data = new FictionalCharacterContainer();
             string cursor = "";
             RestResponse response = null;
+            var hits = 0;
             while (cursor.ToLower() != "false")
             {
                 response = (RestResponse)client.Execute(request);
+                hits++;
                 var retVal = JsonConvert.DeserializeObject<FreeBaseReturn>(response.Content);
                 if(retVal.result != null)
                     data.result.AddRange(retVal.result);
-                if (data.result.Count > 1000)
+                if (data.result.Count > 10000)
                     break;
                 cursor = retVal.cursor;
                 request.Parameters[2].Value = cursor;
             }
-            //var result = data.result.OrderBy(r => r.name).ToList();
+
             var heroes = data
                         .result
                         .Where(d => d.powers_or_abilities.Count() > 0)
-                        .Select(x => new { x.name, x.powers_or_abilities })
+                        .Select(x => new { Name=x.name, Powers=string.Join(", ", x.powers_or_abilities), Gender=string.Join(", ", x.gender) })
+                        .OrderBy(x => x.Name)
                         .ToList();
-            var universes = data
-                            .result
-                            .Where(x => x.appears_in_these_fictional_universes.Count() > 0)
-                            .Select(x => string.Join(", ", x.appears_in_these_fictional_universes))
-                            .GroupBy(
-                            .ToList();
 
-            var powers = data.result.Where(x => x.powers_or_abilities.Count() > 0).Select(x => string.Join(", ", x.powers_or_abilities)).ToList();
-            //Console.WriteLine("My output :" + "\n" + response.Content);
-            //Console.WriteLine("My output :" + "\n" + JsonConvert.SerializeObject(data.result, Formatting.Indented));
+
+            var powers = data
+                        .result
+                        .Where(x => x.powers_or_abilities.Count() > 0)
+                        .SelectMany(x => x.powers_or_abilities)
+                        .Distinct()
+                        .OrderBy(x => x)
+                        .ToList();
+            var powersByCount =
+                    data
+                    .result
+                    .Where(x => x.powers_or_abilities.Count() > 0)
+                    .Join(powers,
+                            h => string.Join(", ", h.powers_or_abilities),
+                            p => p,
+                            (h, p) => new { Power = p })
+                    .Select(r => new { Power=r.Power, Count=r.Power.Count() })
+                    .Distinct()
+                    .OrderByDescending(r => r.Count)
+                    .ToList();
             Console.ReadKey();
         }
     }
