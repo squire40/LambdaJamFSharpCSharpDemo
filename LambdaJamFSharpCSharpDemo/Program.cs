@@ -65,9 +65,7 @@ namespace LambdaJamFSharpCSharpDemo
                 romantically_involved_with = new string[0],
                 powers_or_abilities = new string[0],
                 medical_conditions = new string[0],
-                appears_in_these_fictional_universes = "Marvel Universe",
-                name = "Wolverine"
-
+                appears_in_these_fictional_universes = "Marvel Universe"
             };
 
             request.AddParameter("query", input.ToJsonString());
