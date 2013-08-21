@@ -109,20 +109,59 @@ namespace LambdaJamFSharpCSharpDemo
                                  where string.Join(", ", x.powers_or_abilities).Contains(p)
                                  group x by new { Power = p } into grp
                                  select new { Power = grp.Key.Power, Count = grp.Count() }).OrderByDescending(r => r.Count).ToList();
-            var ethnicity = data.result.Where(x => x.ethnicity.Count() > 0).SelectMany(x => x.ethnicity).Distinct().OrderByDescending(x => x).ToList();
 
-            var heroesWithEthnicity = data.result
-                                        .Where(x => x.ethnicity.Count() > 0)
-                                        .Select(x => new { Name = x.name, Ethnicity = string.Join(", ", x.ethnicity) })
-                                        .OrderBy(x => x.Name)
-                                        .ToList();
+            var topTenPowersByCount = (from x in data.result
+                                       from p in powers
+                                       where x.powers_or_abilities.Count() > 0
+                                       where string.Join(", ", x.powers_or_abilities).Contains(p)
+                                       group x by new { Power = p } into grp
+                                       select new { Power = grp.Key.Power, Count = grp.Count() })
+                                 .OrderByDescending(r => r.Count)
+                                 .Take(10)
+                                 .ToList();
 
-            var heroesWithOccupation = data.result
-                            .Where(x => x.occupation.Count() > 0)
-                            .Select(x => new { Name = x.name, Occupation = string.Join(", ", x.occupation) })
-                            .OrderBy(x => x.Name)
-                            .ToList();
+            foreach (var r in topTenPowersByCount)
+            {
+                Console.WriteLine(string.Format("Count: {0}, \tPower: {1}", r.Count, r.Power));
+            }
             Console.ReadKey();
+            Console.Clear();
+
+            var topTenPowersByCountForMen = (from x in data.result
+                                             from p in powers
+                                             where x.powers_or_abilities.Count() > 0 && x.gender.Count() > 0
+                                             where string.Join(", ", x.powers_or_abilities).Contains(p)
+                                             where string.Join(", ", x.gender).Contains("Male")
+                                             group x by new { Power = p, Gender = string.Join(", ", x.gender) } into grp
+                                             select new { Power = grp.Key.Power, Gender = grp.Key.Gender, Count = grp.Count() })
+                                             .OrderByDescending(r => r.Count)
+                                             .Take(10)
+                                             .ToList();
+
+            foreach (var r in topTenPowersByCountForMen)
+            {
+                Console.WriteLine(string.Format("Count: {0}, \tGender: {1} \tPower: {2}", r.Count, r.Gender, r.Power));
+            }
+            Console.ReadKey();
+            Console.Clear();
+
+            var topTenPowersByCountForWomen = (from x in data.result
+                                               from p in powers
+                                               where x.powers_or_abilities.Count() > 0 && x.gender.Count() > 0
+                                               where string.Join(", ", x.powers_or_abilities).Contains(p)
+                                               where string.Join(", ", x.gender).Contains("Female")
+                                               group x by new { Power = p, Gender = string.Join(", ", x.gender) } into grp
+                                               select new { Power = grp.Key.Power, Gender = grp.Key.Gender, Count = grp.Count() })
+                                               .OrderByDescending(r => r.Count)
+                                               .Take(10)
+                                               .ToList();
+
+            foreach (var r in topTenPowersByCountForWomen)
+            {
+                Console.WriteLine(string.Format("Count: {0}, \tGender: {1} \tPower: {2}", r.Count, r.Gender, r.Power));
+            }
+            Console.ReadKey();
+
         }
     }
 }
