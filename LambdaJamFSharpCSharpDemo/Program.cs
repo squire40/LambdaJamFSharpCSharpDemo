@@ -119,10 +119,13 @@ namespace LambdaJamFSharpCSharpDemo
                                  .OrderByDescending(r => r.Count)
                                  .Take(10)
                                  .ToList();
-
+            Console.WriteLine(string.Format("Total Super Heroes: {0}", heroes.Count()));
+            Console.WriteLine();
+            Console.WriteLine("Top 10 Super Powers by Count");
+            Console.WriteLine();
             foreach (var r in topTenPowersByCount)
             {
-                Console.WriteLine(string.Format("Count: {0}, \tPower: {1}", r.Count, r.Power));
+                Console.WriteLine(string.Format("Count: {0} \tPower: {1}", r.Count, r.Power));
             }
             Console.ReadKey();
             Console.Clear();
@@ -138,9 +141,12 @@ namespace LambdaJamFSharpCSharpDemo
                                              .Take(10)
                                              .ToList();
 
+            Console.Clear();
+            Console.WriteLine("Top Ten Super Powers for men");
+            Console.WriteLine();
             foreach (var r in topTenPowersByCountForMen)
             {
-                Console.WriteLine(string.Format("Count: {0}, \tGender: {1} \tPower: {2}", r.Count, r.Gender, r.Power));
+                Console.WriteLine(string.Format("Count: {0} \tGender: {1} \tPower: {2}", r.Count, r.Gender, r.Power));
             }
             Console.ReadKey();
             Console.Clear();
@@ -156,12 +162,76 @@ namespace LambdaJamFSharpCSharpDemo
                                                .Take(10)
                                                .ToList();
 
+            Console.Clear();
+            Console.WriteLine("Top Ten Super Powers for women");
+            Console.WriteLine();
             foreach (var r in topTenPowersByCountForWomen)
             {
-                Console.WriteLine(string.Format("Count: {0}, \tGender: {1} \tPower: {2}", r.Count, r.Gender, r.Power));
+                Console.WriteLine(string.Format("Count: {0} \tGender: {1} \tPower: {2}", r.Count, r.Gender, r.Power));
             }
             Console.ReadKey();
-
+            Console.Clear();
+            Console.WriteLine("Female heroes having the top 5 powers:");
+            Console.WriteLine();
+            for (int i = 0; i < 5; i++)
+            {
+                var power = topTenPowersByCountForWomen[i].Power;
+                Console.WriteLine(string.Format("Power: {0}", power));
+                Console.WriteLine();
+                var list = heroes
+                            .Where(x => x.Gender.Contains("Female"))
+                            .Where(x => x.Powers.Contains(power))
+                            .ToList();
+                var counter = 0;
+                foreach (var hero in list)
+                {
+                    if(counter % 15 == 0 && counter > 0)
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine("Press any key...");
+                        Console.WriteLine();
+                        Console.ReadKey();
+                        Console.Clear();
+                        Console.WriteLine(string.Format("Power: {0}", power));
+                        Console.WriteLine();
+                    }
+                    Console.WriteLine(hero.Name);
+                    counter++;
+                }
+                Console.ReadKey();
+                Console.Clear();
+            }
+            Console.Clear();
+            Console.WriteLine("Male heroes having the top 5 powers:");
+            Console.WriteLine();
+            for (int i = 0; i < 5; i++)
+            {
+                var power = topTenPowersByCountForMen[i].Power;
+                Console.WriteLine(string.Format("Power: {0}", power));
+                Console.WriteLine();
+                var list = heroes
+                            .Where(x => x.Gender.Contains("Male"))
+                            .Where(x => x.Powers.Contains(power))
+                            .ToList();
+                var counter = 0;
+                foreach (var hero in list)
+                {
+                    if (counter % 15 == 0 && counter > 0)
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine("Press any key...");
+                        Console.WriteLine();
+                        Console.ReadKey();
+                        Console.Clear();
+                        Console.WriteLine(string.Format("Power: {0}", power));
+                        Console.WriteLine();
+                    }
+                    Console.WriteLine(hero.Name);
+                    counter++;
+                }
+                Console.ReadKey();
+                Console.Clear();
+            }
         }
     }
 }
