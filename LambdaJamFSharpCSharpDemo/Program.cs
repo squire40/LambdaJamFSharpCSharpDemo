@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Linq;
 
 namespace LambdaJamFSharpCSharpDemo
 {
@@ -66,7 +65,8 @@ namespace LambdaJamFSharpCSharpDemo
                 romantically_involved_with = new string[0],
                 powers_or_abilities = new string[0],
                 medical_conditions = new string[0],
-                appears_in_these_fictional_universes = "Marvel Universe"
+                appears_in_these_fictional_universes = "Marvel Universe",
+                name = "Wolverine"
 
             };
 
