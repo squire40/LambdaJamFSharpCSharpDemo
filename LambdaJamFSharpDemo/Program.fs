@@ -11,7 +11,8 @@ let main argv =
 
     
 
-    let elements = data.``Science and Technology``.Chemistry.``Chemical Elements`` |> Seq.toList
+    let elements = data.``Arts and Entertainment``.``Fictional Universes``.``Fictional Characters``.Individuals
+    //.``Science and Technology``.Chemistry.``Chemical Elements`` |> Seq.toList
 
     let hydrogen = data.``Science and Technology``.Chemistry.``Chemical Elements``.Individuals.Hydrogen 
     0 // return an integer exit code
