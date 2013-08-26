@@ -123,6 +123,9 @@ namespace LambdaJamFSharpCSharpDemo
                                  .Take(10)
                                  .ToList();
             sw.Stop();
+            Console.WriteLine(string.Format("Time to get and slice data: {0} minutes, {1} seconds, {2} milliseconds", sw.Elapsed.Minutes, sw.Elapsed.Seconds, sw.Elapsed.Milliseconds));
+            Console.ReadKey();
+            Console.Clear();
             Console.WriteLine(string.Format("Total Super Heroes: {0}", heroes.Count()));
             Console.WriteLine();
             Console.WriteLine("Top 10 Super Powers by Count");
