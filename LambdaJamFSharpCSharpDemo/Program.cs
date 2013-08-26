@@ -2,6 +2,7 @@
 using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -49,6 +50,8 @@ namespace LambdaJamFSharpCSharpDemo
         }
         static void Main(string[] args)
         {
+            var sw = new Stopwatch();
+            sw.Start();
             var client = new RestClient();
             client.BaseUrl = "https://www.googleapis.com/freebase/v1/mqlread";
             var request = new RestRequest(Method.GET);
@@ -119,6 +122,7 @@ namespace LambdaJamFSharpCSharpDemo
                                  .OrderByDescending(r => r.Count)
                                  .Take(10)
                                  .ToList();
+            sw.Stop();
             Console.WriteLine(string.Format("Total Super Heroes: {0}", heroes.Count()));
             Console.WriteLine();
             Console.WriteLine("Top 10 Super Powers by Count");
