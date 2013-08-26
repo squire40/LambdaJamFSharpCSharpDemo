@@ -11,7 +11,7 @@ let main argv =
 
     
 
-    let elements = data.``Arts and Entertainment``.``Fictional Universes``.``Fictional Characters``.Individuals 
+    let elements = data.``Arts and Entertainment``.``Fictional Universes``.``Fictional Characters`` |> Seq.toList
     //.``Science and Technology``.Chemistry.``Chemical Elements`` |> Seq.toList
 
     
