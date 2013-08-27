@@ -12,10 +12,20 @@ let main argv =
     printfn "%A" argv    
     let data = freebaseDataProvider.GetDataContext() 
     data.DataContext.Limit <- 10
-    let elements = data.``Arts and Entertainment``.``Fictional Universes``.``Fictional Characters`` |> Seq.toList
-
-//    let rec getData = 
+    printfn "Getting heroes"
+//    let getHeroes = 
+//        query { for h in data.``Arts and Entertainment``.``Fictional Universes``.``Fictional Characters`` do
+//                where (Array.toList h.``Appears In These Fictional Universes`` = "Wolverine")
+//                select h 
+//                }
+//        |> Seq.toList
         
-    printfn "%A" elements
-    let hydrogen = data.``Science and Technology``.Chemistry.``Chemical Elements``.Individuals.Hydrogen 
+    let presidents = 
+        query { for e in data.Society.Government.``US Presidents`` do 
+                select e.Name } 
+        |> Seq.toList
+
+    printfn "%A" presidents
+    let blah = presidents
+    let input = System.Console.ReadKey
     0 // return an integer exit code
