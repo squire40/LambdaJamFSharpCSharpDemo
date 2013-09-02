@@ -11,14 +11,15 @@ type freebaseDataProvider = FreebaseDataProvider<Key=apiKey>
 let main argv = 
     printfn "%A" argv    
     let data = freebaseDataProvider.GetDataContext() 
-    data.DataContext.Limit <- 10
+//    data.DataContext.Limit <- 10
     printfn "Getting heroes"
-//    let getHeroes = 
-//        query { for h in data.``Arts and Entertainment``.``Fictional Universes``.``Fictional Characters`` do
-//                where (Array.toList h.``Appears In These Fictional Universes`` = "Wolverine")
-//                select h 
-//                }
-//        |> Seq.toList
+    let heroes = Seq.toList data.``Arts and Entertainment``.``Fictional Universes``.``Fictional Characters``.Individuals
+    let getHeroes = 
+        query { for h in heroes do
+                where (h. == "Marvel")
+                select h 
+                }
+        |> Seq.toList
         
     let presidents = 
         query { for e in data.Society.Government.``US Presidents`` do 
