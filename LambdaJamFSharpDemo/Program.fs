@@ -2,25 +2,35 @@
 // See the 'F# Tutorial' project for more help.
 
 open FSharp.Data
+open FSharp.Data.FreebaseOperators
+open System.Linq
 
 [<Literal>]
-let apiKey = "AIzaSyAUA6Pt5n4IyMlAc-5r2SM0SCuEUDHVsVg"
+let apiKey = @"AIzaSyAUA6Pt5n4IyMlAc-5r2SM0SCuEUDHVsVg"
 type freebaseDataProvider = FreebaseDataProvider<Key=apiKey>
 
 [<EntryPoint>]
 let main argv = 
-    printfn "%A" argv    
-    let data = freebaseDataProvider.GetDataContext() 
-    data.DataContext.Limit <- 100
-    printfn "Getting heroes"
+    let data = freebaseDataProvider.GetDataContext()
+    //data.DataContext.Limit <- 100
+    printf "Getting heroes"
 //    let wolvie = query { for w in data.``Arts and Entertainment``.``Fictional Universes``.``Fictional Characters`` do
 //                            where (w.Name.Equals "Wolverine") }
 //                            |> Seq.toList
+    
+    let fictionalChars = data.``Arts and Entertainment``.``Fictional Universes``.``Fictional Universes``
 
-    let heroes = query { for h in data.``Arts and Entertainment``.``Fictional Universes``.``Fictional Characters`` do
-                            where ((h.``Appears In These Fictional Universes``.Equals "Marvel") && (not(h.``Powers or Abilities``.Equals "")))
-                            select (h.Name, h.Gender, h.``Powers or Abilities``) }
-                            |> Seq.toList
+    let marvel = query { 
+                        for h in fictionalChars do
+                        where (h.Name.Equals "Marvel Universe")
+                        }
+                        |> Seq.exactlyOne
+
+    let heroesWithPowers =
+        marvel.Characters
+        |> Seq.filter (fun x -> x.``Powers or Abilities``.Count() > 0)
+//        |> Seq.iter (fun x -> printfn "%A" x.Name)
+                       
 //    let doOutput s = 
 //        printfn "%s" s
     let name = "Dave"        
