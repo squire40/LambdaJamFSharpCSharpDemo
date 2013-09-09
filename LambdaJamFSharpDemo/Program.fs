@@ -13,19 +13,29 @@ let main argv =
     let data = freebaseDataProvider.GetDataContext() 
     data.DataContext.Limit <- 100
     printfn "Getting heroes"
+//    let wolvie = query { for w in data.``Arts and Entertainment``.``Fictional Universes``.``Fictional Characters`` do
+//                            where (w.Name.Equals "Wolverine") }
+//                            |> Seq.toList
+
     let heroes = query { for h in data.``Arts and Entertainment``.``Fictional Universes``.``Fictional Characters`` do
                             where ((h.``Appears In These Fictional Universes``.Equals "Marvel") && (not(h.``Powers or Abilities``.Equals "")))
                             select (h.Name, h.Gender, h.``Powers or Abilities``) }
                             |> Seq.toList
+//    let doOutput s = 
+//        printfn "%s" s
+    let name = "Dave"        
 
+//    for h in heroes do
+//        printfn "%A" h
 //    let heroList = heroes |> Seq.toList
 //    let heroesWithPowers = query { for h in heroes do
 //                                    where (not (h.``Powers or Abilities``.Equals"")) }
 //                                    |> Seq.toList
 
-//    let powers = query { for p in heroesWithPowers do
+    
+//    let powers = query { for p in heroes do
 //                            select p.``Powers or Abilities`` }
-//                            |> Seq.toList
+////                            |> Seq.toList
 
 //    let doOutput = (fun s -> Seq.iter |> System.Console.WriteLine s)
 //    doOutput powers
