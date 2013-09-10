@@ -12,11 +12,7 @@ type freebaseDataProvider = FreebaseDataProvider<Key=apiKey>
 [<EntryPoint>]
 let main argv = 
     let data = freebaseDataProvider.GetDataContext()
-    //data.DataContext.Limit <- 100
     printf "Getting heroes"
-//    let wolvie = query { for w in data.``Arts and Entertainment``.``Fictional Universes``.``Fictional Characters`` do
-//                            where (w.Name.Equals "Wolverine") }
-//                            |> Seq.toList
     
     let fictionalChars = data.``Arts and Entertainment``.``Fictional Universes``.``Fictional Universes``
 
@@ -26,21 +22,18 @@ let main argv =
                         }
                         |> Seq.exactlyOne
 
-    let heroesWithPowers =
+    let heroesWithPowersContainer =
         marvel.Characters
         |> Seq.filter (fun x -> x.``Powers or Abilities``.Count() > 0)
-//        |> Seq.iter (fun x -> printfn "%A" x.Name)
+        |> Seq.toList
+        
+    let heroesWithPowers = 
+        query { for h in heroesWithPowersContainer do
+                select (h.Name, System.String.Join(", ", h.``Powers or Abilities``), System.String.Join(", ", h.Gender)) }
+                |> Seq.toList
                        
-//    let doOutput s = 
-//        printfn "%s" s
     let name = "Dave"        
 
-//    for h in heroes do
-//        printfn "%A" h
-//    let heroList = heroes |> Seq.toList
-//    let heroesWithPowers = query { for h in heroes do
-//                                    where (not (h.``Powers or Abilities``.Equals"")) }
-//                                    |> Seq.toList
 
     
 //    let powers = query { for p in heroes do
