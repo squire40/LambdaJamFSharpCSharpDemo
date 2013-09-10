@@ -22,18 +22,21 @@ let main argv =
                         }
                         |> Seq.exactlyOne
 
-    let heroesWithPowersContainer =
+    let heroesWithPowers =
         marvel.Characters
         |> Seq.filter (fun x -> x.``Powers or Abilities``.Count() > 0)
+        |> Seq.map (fun y -> {Name = x.Name; Gender = System.String.Join(", ", x.Gender); Powers = System.String.Join(", ", x.``Powers or Abilities``)})
         |> Seq.toList
         
-    let heroesWithPowers = 
-        query { for h in heroesWithPowersContainer do
-                select (h.Name, System.String.Join(", ", h.``Powers or Abilities``), System.String.Join(", ", h.Gender)) }
-                |> Seq.toList
                        
     let name = "Dave"        
 
+//    for h in heroes do
+//        printfn "%A" h
+//    let heroList = heroes |> Seq.toList
+//    let heroesWithPowers = query { for h in heroes do
+//                                    where (not (h.``Powers or Abilities``.Equals"")) }
+//                                    |> Seq.toList
 
     
 //    let powers = query { for p in heroes do
