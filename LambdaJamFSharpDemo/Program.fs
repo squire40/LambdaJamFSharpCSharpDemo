@@ -8,7 +8,7 @@ open System.Linq
 [<Literal>]
 let apiKey = @"AIzaSyAUA6Pt5n4IyMlAc-5r2SM0SCuEUDHVsVg"
 type freebaseDataProvider = FreebaseDataProvider<Key=apiKey>
-
+type hero = {Name:string; Gender:string; Powers:string}
 [<EntryPoint>]
 let main argv = 
     let data = freebaseDataProvider.GetDataContext()
