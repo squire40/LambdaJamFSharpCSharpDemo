@@ -122,6 +122,29 @@ namespace LambdaJamFSharpCSharpDemo
                                  .OrderByDescending(r => r.Count)
                                  .Take(10)
                                  .ToList();
+
+            var topTenPowersByCountForMen = (from x in data.result
+                                             from p in powers
+                                             where x.powers_or_abilities.Count() > 0 && x.gender.Count() > 0
+                                             where string.Join(", ", x.powers_or_abilities).Contains(p)
+                                             where string.Join(", ", x.gender).Contains("Male")
+                                             group x by new { Power = p, Gender = string.Join(", ", x.gender) } into grp
+                                             select new { Power = grp.Key.Power, Gender = grp.Key.Gender, Count = grp.Count() })
+                                 .OrderByDescending(r => r.Count)
+                                 .Take(10)
+                                 .ToList();
+
+            var topTenPowersByCountForWomen = (from x in data.result
+                                               from p in powers
+                                               where x.powers_or_abilities.Count() > 0 && x.gender.Count() > 0
+                                               where string.Join(", ", x.powers_or_abilities).Contains(p)
+                                               where string.Join(", ", x.gender).Contains("Female")
+                                               group x by new { Power = p, Gender = string.Join(", ", x.gender) } into grp
+                                               select new { Power = grp.Key.Power, Gender = grp.Key.Gender, Count = grp.Count() })
+                                   .OrderByDescending(r => r.Count)
+                                   .Take(10)
+                                   .ToList();
+
             sw.Stop();
             Console.WriteLine(string.Format("Time to get and slice data: {0} minutes, {1} seconds, {2} milliseconds", sw.Elapsed.Minutes, sw.Elapsed.Seconds, sw.Elapsed.Milliseconds));
             Console.ReadKey();
@@ -134,20 +157,8 @@ namespace LambdaJamFSharpCSharpDemo
             {
                 Console.WriteLine(string.Format("Count: {0} \tPower: {1}", r.Count, r.Power));
             }
+
             Console.ReadKey();
-            Console.Clear();
-
-            var topTenPowersByCountForMen = (from x in data.result
-                                             from p in powers
-                                             where x.powers_or_abilities.Count() > 0 && x.gender.Count() > 0
-                                             where string.Join(", ", x.powers_or_abilities).Contains(p)
-                                             where string.Join(", ", x.gender).Contains("Male")
-                                             group x by new { Power = p, Gender = string.Join(", ", x.gender) } into grp
-                                             select new { Power = grp.Key.Power, Gender = grp.Key.Gender, Count = grp.Count() })
-                                             .OrderByDescending(r => r.Count)
-                                             .Take(10)
-                                             .ToList();
-
             Console.Clear();
             Console.WriteLine("Top Ten Super Powers for men");
             Console.WriteLine();
@@ -157,25 +168,13 @@ namespace LambdaJamFSharpCSharpDemo
             }
             Console.ReadKey();
             Console.Clear();
-
-            var topTenPowersByCountForWomen = (from x in data.result
-                                               from p in powers
-                                               where x.powers_or_abilities.Count() > 0 && x.gender.Count() > 0
-                                               where string.Join(", ", x.powers_or_abilities).Contains(p)
-                                               where string.Join(", ", x.gender).Contains("Female")
-                                               group x by new { Power = p, Gender = string.Join(", ", x.gender) } into grp
-                                               select new { Power = grp.Key.Power, Gender = grp.Key.Gender, Count = grp.Count() })
-                                               .OrderByDescending(r => r.Count)
-                                               .Take(10)
-                                               .ToList();
-
-            Console.Clear();
             Console.WriteLine("Top Ten Super Powers for women");
             Console.WriteLine();
             foreach (var r in topTenPowersByCountForWomen)
             {
                 Console.WriteLine(string.Format("Count: {0} \tGender: {1} \tPower: {2}", r.Count, r.Gender, r.Power));
             }
+
             Console.ReadKey();
             Console.Clear();
             Console.WriteLine("Female heroes having the top 5 powers:");
