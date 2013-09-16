@@ -25,9 +25,16 @@ let main argv =
     let heroesWithPowers =
         marvel.Characters
         |> Seq.filter (fun x -> x.``Powers or Abilities``.Count() > 0)
-        |> Seq.map (fun y -> {Name = x.Name; Gender = System.String.Join(", ", x.Gender); Powers = System.String.Join(", ", x.``Powers or Abilities``)})
+        |> Seq.map (fun y -> {Name = y.Name; Gender = System.String.Join(", ", y.Gender); Powers = System.String.Join(", ", y.``Powers or Abilities``)})
         |> Seq.toList
         
+    let powers = 
+        marvel.Characters 
+        |> Seq.filter (fun x -> x.``Powers or Abilities``.Count() > 0)
+        |> Seq.collect (fun y -> y.``Powers or Abilities``)
+        |> Seq.distinctBy (fun a -> a.Name)
+        |> Seq.sortBy (fun z -> z.Name)
+        |> Seq.toList
                        
     let name = "Dave"        
 
