@@ -22,20 +22,47 @@ let main argv =
                         }
                         |> Seq.exactlyOne
 
+    let heroes = marvel.Characters
+                    |> Seq.filter (fun x -> x.``Powers or Abilities``.Count() > 0)
+                    |> Seq.toList
+
     let heroesWithPowers =
-        marvel.Characters
-        |> Seq.filter (fun x -> x.``Powers or Abilities``.Count() > 0)
+        heroes
         |> Seq.map (fun y -> {Name = y.Name; Gender = System.String.Join(", ", y.Gender); Powers = System.String.Join(", ", y.``Powers or Abilities``)})
         |> Seq.toList
         
     let powers = 
-        marvel.Characters 
-        |> Seq.filter (fun x -> x.``Powers or Abilities``.Count() > 0)
+        heroes
         |> Seq.collect (fun y -> y.``Powers or Abilities``)
         |> Seq.distinctBy (fun a -> a.Name)
         |> Seq.sortBy (fun z -> z.Name)
         |> Seq.toList
-                       
+
+//    let powersByCount = 
+//        query { for p in powers do
+//                for h in heroesWithPowers do
+//                where h.Powers.Contains p.Name
+//                groupBy new Power = p.name into grp
+//                select (Power = grp.Key.
+                
+//    let powersByCount = 
+//        query { for p in powers do
+//                for h in heroesWithPowers do
+//                where (h.Powers.Contains p.Name)
+//                groupBy (p) into grp
+//                sortByDescending (grp.Count())
+//                select (grp.Key, grp.Count) }
+//                |> Seq.toList
+
+    let powersByCount = 
+        query { for p in powers do
+                for h in heroes do
+                where (System.String.Join(", ", h.``Powers or Abilities``).Contains(p.Name)) }
+//                groupBy p into grp
+//                sortByDescending (grp.Count())
+//                select (grp.Key, grp.Count) }
+                |> Seq.toList
+
     let name = "Dave"        
 
 //    for h in heroes do
@@ -44,6 +71,7 @@ let main argv =
 //    let heroesWithPowers = query { for h in heroes do
 //                                    where (not (h.``Powers or Abilities``.Equals"")) }
 //                                    |> Seq.toList
+
 
     
 //    let powers = query { for p in heroes do
