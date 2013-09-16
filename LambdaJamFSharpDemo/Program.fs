@@ -38,29 +38,13 @@ let main argv =
         |> Seq.sortBy (fun z -> z.Name)
         |> Seq.toList
 
-//    let powersByCount = 
-//        query { for p in powers do
-//                for h in heroesWithPowers do
-//                where h.Powers.Contains p.Name
-//                groupBy new Power = p.name into grp
-//                select (Power = grp.Key.
-                
-//    let powersByCount = 
-//        query { for p in powers do
-//                for h in heroesWithPowers do
-//                where (h.Powers.Contains p.Name)
-//                groupBy (p) into grp
-//                sortByDescending (grp.Count())
-//                select (grp.Key, grp.Count) }
-//                |> Seq.toList
-
     let powersByCount = 
         query { for p in powers do
                 for h in heroes do
-                where (System.String.Join(", ", h.``Powers or Abilities``).Contains(p.Name)) }
-//                groupBy p into grp
-//                sortByDescending (grp.Count())
-//                select (grp.Key, grp.Count) }
+                where (System.String.Join(", ", h.``Powers or Abilities``).Contains(p.Name)) 
+                groupBy p into grp
+                sortByDescending (grp.Count())
+                select (grp.Key, grp.Count()) }
                 |> Seq.toList
 
     let name = "Dave"        
