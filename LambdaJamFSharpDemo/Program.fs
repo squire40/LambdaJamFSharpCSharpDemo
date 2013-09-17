@@ -8,7 +8,7 @@ open System.Linq
 [<Literal>]
 let apiKey = @"AIzaSyAUA6Pt5n4IyMlAc-5r2SM0SCuEUDHVsVg"
 type freebaseDataProvider = FreebaseDataProvider<Key=apiKey>
-type hero = {Name:string; Gender:string; Powers:string}
+type hero = {Name:string; Gender:string list; Powers:string list}
 [<EntryPoint>]
 let main argv = 
     let data = freebaseDataProvider.GetDataContext()
@@ -23,29 +23,44 @@ let main argv =
                         |> Seq.exactlyOne
 
     let heroes = marvel.Characters
-                    |> Seq.filter (fun x -> x.``Powers or Abilities``.Count() > 0)
-                    |> Seq.toList
+                    |> List.ofSeq
+                    |> List.filter (fun x -> x.``Powers or Abilities``.Any())
+//                    |> Seq.toList
 
     let heroesWithPowers =
         heroes
-        |> Seq.map (fun y -> {Name = y.Name; Gender = System.String.Join(", ", y.Gender); Powers = System.String.Join(", ", y.``Powers or Abilities``)})
-        |> Seq.toList
+        |> List.map (fun y -> {Name = y.Name; Gender = y.Gender |> Seq.map string |> Seq.toList; Powers = y.``Powers or Abilities``|> Seq.map string |> Seq.toList})
+        //|> Seq.toList
         
     let powers = 
         heroes
         |> Seq.collect (fun y -> y.``Powers or Abilities``)
-        |> Seq.distinctBy (fun a -> a.Name)
+        |> Seq.distinctBy (fun x -> x.Name)
         |> Seq.sortBy (fun z -> z.Name)
+        |> Seq.map (fun x' -> x'.Name)
         |> Seq.toList
 
     let powersByCount = 
-        query { for p in powers do
-                for h in heroes do
-                where (System.String.Join(", ", h.``Powers or Abilities``).Contains(p.Name)) 
-                groupBy p into grp
-                sortByDescending (grp.Count())
-                select (grp.Key, grp.Count()) }
-                |> Seq.toList
+//        query { for p in powers do
+//                for h in heroes do
+//                where (System.String.Join(", ", h.``Powers or Abilities``).Contains(p.Name))
+//                groupBy p into grp
+//                sortByDescending (grp.Count())
+//                select (grp.Key, grp.Count()) }
+//                |> Seq.toList
+
+//        heroesWithPowers
+//        |> Seq.countBy (fun x -> x.Powers)
+
+        powers
+        |> List.map (fun x -> 
+                        (x, heroesWithPowers
+                            |> List.fold (fun acc y -> 
+                                            if y.Powers |> List.exists (fun z -> z = x) then 
+                                                acc+1 
+                                            else acc) 0))
+        |> List.sortBy (fun x -> snd x)
+        |> List.rev
 
     let name = "Dave"        
 
