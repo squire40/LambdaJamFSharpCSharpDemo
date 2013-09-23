@@ -25,7 +25,7 @@ let main argv =
     let heroes = marvel.Characters
                     |> List.ofSeq
                     |> List.filter (fun x -> x.``Powers or Abilities``.Any())
-//                    |> Seq.toList
+                    |> Seq.toList
 
     let heroesWithPowers =
         heroes
@@ -41,17 +41,6 @@ let main argv =
         |> Seq.toList
 
     let powersByCount = 
-//        query { for p in powers do
-//                for h in heroes do
-//                where (System.String.Join(", ", h.``Powers or Abilities``).Contains(p.Name))
-//                groupBy p into grp
-//                sortByDescending (grp.Count())
-//                select (grp.Key, grp.Count()) }
-//                |> Seq.toList
-
-//        heroesWithPowers
-//        |> Seq.countBy (fun x -> x.Powers)
-
         powers
         |> List.map (fun x -> 
                         (x, heroesWithPowers
@@ -61,6 +50,38 @@ let main argv =
                                             else acc) 0))
         |> List.sortBy (fun x -> snd x)
         |> List.rev
+
+    let topTenPowersByCount = 
+        powersByCount
+        |> Seq.take 10
+        |> Seq.toList
+
+    let topTenPowersByCountForMen = 
+        powers
+        |> List.map (fun x -> 
+                        (x, heroesWithPowers |> List.filter (fun i -> i.Gender.Contains("Male"))
+                            |> List.fold (fun acc y -> 
+                                            if y.Powers |> List.exists (fun z -> z = x) then 
+                                                acc+1 
+                                            else acc) 0))
+        |> List.sortBy (fun x -> snd x)
+        |> List.rev
+        |> Seq.take 10
+        |> Seq.toList
+
+    let topTenPowersByCountForWomen = 
+        powers
+        |> List.map (fun x -> 
+                        (x, heroesWithPowers |> List.filter (fun i -> i.Gender.Contains("Female"))
+                            |> List.fold (fun acc y -> 
+                                            if y.Powers |> List.exists (fun z -> z = x) then 
+                                                acc+1 
+                                            else acc) 0))
+        |> List.sortBy (fun x -> snd x)
+        |> List.rev
+        |> Seq.take 10
+        |> Seq.toList
+
 
     let name = "Dave"        
 
