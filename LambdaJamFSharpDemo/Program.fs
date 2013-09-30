@@ -1,7 +1,4 @@
-﻿// Learn more about F# at http://fsharp.net
-// See the 'F# Tutorial' project for more help.
-
-open FSharp.Data
+﻿open FSharp.Data
 open FSharp.Data.FreebaseOperators
 open System.Linq
 
@@ -11,6 +8,8 @@ type freebaseDataProvider = FreebaseDataProvider<Key=apiKey>
 type hero = {Name:string; Gender:string list; Powers:string list}
 [<EntryPoint>]
 let main argv = 
+    let watch = System.Diagnostics.Stopwatch.StartNew()
+
     let data = freebaseDataProvider.GetDataContext()
     printf "Getting heroes"
     
@@ -23,15 +22,19 @@ let main argv =
                         |> Seq.exactlyOne
 
     let heroes = marvel.Characters
-                    |> List.ofSeq
-                    |> List.filter (fun x -> x.``Powers or Abilities``.Any())
+                    |> Seq.filter(fun x -> x.``Powers or Abilities``.Any())
                     |> Seq.toList
 
     let heroesWithPowers =
         heroes
-        |> List.map (fun y -> {Name = y.Name; Gender = y.Gender |> Seq.map string |> Seq.toList; Powers = y.``Powers or Abilities``|> Seq.map string |> Seq.toList})
-        //|> Seq.toList
-        
+        |> List.map (fun y -> { Name   = y.Name; 
+                                Gender = y.Gender |> Seq.map string |> Seq.toList
+                                Powers = y.``Powers or Abilities``|> Seq.map string |> Seq.toList })
+    
+    let maleHeroes   = heroesWithPowers |> List.filter (fun i -> i.Gender.Contains("Male"))
+    let femaleHeroes = heroesWithPowers |> List.filter (fun i -> i.Gender.Contains("Female"))
+    let powersFilter x y = y.Powers |> List.exists (fun z -> z = x)
+    
     let powers = 
         heroes
         |> Seq.collect (fun y -> y.``Powers or Abilities``)
@@ -40,48 +43,24 @@ let main argv =
         |> Seq.map (fun x' -> x'.Name)
         |> Seq.toList
 
-    let powersByCount = 
-        powers
-        |> List.map (fun x -> 
-                        (x, heroesWithPowers
-                            |> List.fold (fun acc y -> 
-                                            if y.Powers |> List.exists (fun z -> z = x) then 
-                                                acc+1 
-                                            else acc) 0))
+    let orderedCounter a b filter = 
+        a
+        |> List.map (fun x -> x, b |> List.filter (filter x) |> List.length)
         |> List.sortBy (fun x -> snd x)
         |> List.rev
 
-    let topTenPowersByCount = 
-        powersByCount
+    let topTenPowers heroes' =
+        (powers, heroes', powersFilter)
+        |||> orderedCounter
         |> Seq.take 10
         |> Seq.toList
 
-    let topTenPowersByCountForMen = 
-        powers
-        |> List.map (fun x -> 
-                        (x, heroesWithPowers |> List.filter (fun i -> i.Gender.Contains("Male"))
-                            |> List.fold (fun acc y -> 
-                                            if y.Powers |> List.exists (fun z -> z = x) then 
-                                                acc+1 
-                                            else acc) 0))
-        |> List.sortBy (fun x -> snd x)
-        |> List.rev
-        |> Seq.take 10
-        |> Seq.toList
+    let topTenPowersByCountForMen = maleHeroes |> topTenPowers
+    let topTenPowersByCountForWomen = femaleHeroes |> topTenPowers
 
-    let topTenPowersByCountForWomen = 
-        powers
-        |> List.map (fun x -> 
-                        (x, heroesWithPowers |> List.filter (fun i -> i.Gender.Contains("Female"))
-                            |> List.fold (fun acc y -> 
-                                            if y.Powers |> List.exists (fun z -> z = x) then 
-                                                acc+1 
-                                            else acc) 0))
-        |> List.sortBy (fun x -> snd x)
-        |> List.rev
-        |> Seq.take 10
-        |> Seq.toList
-
+    let stopTheWatch =
+        watch.Stop()
+        printfn "Time Elapsed: %A" watch.ElapsedMilliseconds
 
     let name = "Dave"        
 
