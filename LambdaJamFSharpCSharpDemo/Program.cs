@@ -109,14 +109,14 @@ namespace LambdaJamFSharpCSharpDemo
             var powersByCount = (from x in data.result
                                  from p in powers
                                  where x.powers_or_abilities.Count() > 0
-                                 where string.Join(", ", x.powers_or_abilities).Contains(p)
+                                 where x.powers_or_abilities.Contains(p)
                                  group x by new { Power = p } into grp
                                  select new { Power = grp.Key.Power, Count = grp.Count() }).OrderByDescending(r => r.Count).ToList();
 
             var topTenPowersByCount = (from x in data.result
                                        from p in powers
                                        where x.powers_or_abilities.Count() > 0
-                                       where string.Join(", ", x.powers_or_abilities).Contains(p)
+                                       where x.powers_or_abilities.Contains(p)
                                        group x by new { Power = p } into grp
                                        select new { Power = grp.Key.Power, Count = grp.Count() })
                                  .OrderByDescending(r => r.Count)
@@ -126,8 +126,8 @@ namespace LambdaJamFSharpCSharpDemo
             var topTenPowersByCountForMen = (from x in data.result
                                              from p in powers
                                              where x.powers_or_abilities.Count() > 0 && x.gender.Count() > 0
-                                             where string.Join(", ", x.powers_or_abilities).Contains(p)
-                                             where string.Join(", ", x.gender).Contains("Male")
+                                             where x.powers_or_abilities.Contains(p)
+                                             where x.gender.Contains("Male")
                                              group x by new { Power = p, Gender = string.Join(", ", x.gender) } into grp
                                              select new { Power = grp.Key.Power, Gender = grp.Key.Gender, Count = grp.Count() })
                                  .OrderByDescending(r => r.Count)
@@ -137,8 +137,8 @@ namespace LambdaJamFSharpCSharpDemo
             var topTenPowersByCountForWomen = (from x in data.result
                                                from p in powers
                                                where x.powers_or_abilities.Count() > 0 && x.gender.Count() > 0
-                                               where string.Join(", ", x.powers_or_abilities).Contains(p)
-                                               where string.Join(", ", x.gender).Contains("Female")
+                                               where x.powers_or_abilities.Contains(p)
+                                               where x.gender.Contains("Female")
                                                group x by new { Power = p, Gender = string.Join(", ", x.gender) } into grp
                                                select new { Power = grp.Key.Power, Gender = grp.Key.Gender, Count = grp.Count() })
                                    .OrderByDescending(r => r.Count)
