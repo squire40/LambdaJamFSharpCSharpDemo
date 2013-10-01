@@ -11,7 +11,7 @@ let main argv =
     let watch = System.Diagnostics.Stopwatch.StartNew()
 
     let data = freebaseDataProvider.GetDataContext()
-    printf "Getting heroes"
+//    printf "Getting heroes"
     
     let fictionalChars = data.``Arts and Entertainment``.``Fictional Universes``.``Fictional Universes``
 
@@ -58,12 +58,20 @@ let main argv =
     let topTenPowersByCountForMen = maleHeroes |> topTenPowers
     let topTenPowersByCountForWomen = femaleHeroes |> topTenPowers
 
-    let stopTheWatch =
-        watch.Stop()
-        printfn "Time Elapsed: %A" watch.ElapsedMilliseconds
+    watch.Stop()
+    System.Console.WriteLine(System.String.Format("Time to get and slice data: {0} minutes, {1} seconds, {2} milliseconds", watch.Elapsed.Minutes, watch.Elapsed.Seconds, watch.Elapsed.Milliseconds));
+    System.Console.ReadKey() |> ignore
+    System.Console.Clear()
+    System.Console.WriteLine(System.String.Format("Total Super Heroes: {0}", heroes.Count()))
+    System.Console.WriteLine()
+    System.Console.WriteLine("Top 10 Super Powers by Count")
+    System.Console.WriteLine()
+    for p in topTenPowers heroesWithPowers do
+//        printf "\n%A %A" fst (p) snd (p)
+        System.Console.WriteLine(System.String.Format("{0} {1}", fst (p) |> string, snd (p) |> string ))
 
-    let name = "Dave"        
-
+    System.Console.ReadKey() |> ignore
+    
 //    for h in heroes do
 //        printfn "%A" h
 //    let heroList = heroes |> Seq.toList
