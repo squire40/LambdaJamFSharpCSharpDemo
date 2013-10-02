@@ -67,10 +67,13 @@ let main argv =
     System.Console.WriteLine("Top 10 Super Powers by Count")
     System.Console.WriteLine()
     for p in topTenPowers heroesWithPowers do
-        System.Console.WriteLine(System.String.Format("Count: {0} \tPower: {1}", snd (p) |> string, fst (p) |> string ))
-
+        printfn "Count: %i \tPower: %s" (snd p) (fst p)
     System.Console.ReadKey() |> ignore
-    
+    System.Console.Clear()
+    printfn "Top Ten Super Powers for men\r\n"
+    for p in topTenPowersByCountForMen do
+        printfn "Count: %i \tGender: %s \tPower: %s" 
+    //(snd(p), fst (p))
 //    for h in heroes do
 //        printfn "%A" h
 //    let heroList = heroes |> Seq.toList
