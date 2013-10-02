@@ -67,8 +67,7 @@ let main argv =
     System.Console.WriteLine("Top 10 Super Powers by Count")
     System.Console.WriteLine()
     for p in topTenPowers heroesWithPowers do
-//        printf "\n%A %A" fst (p) snd (p)
-        System.Console.WriteLine(System.String.Format("{0} {1}", fst (p) |> string, snd (p) |> string ))
+        System.Console.WriteLine(System.String.Format("Count: {0} \tPower: {1}", snd (p) |> string, fst (p) |> string ))
 
     System.Console.ReadKey() |> ignore
     
