@@ -6,6 +6,12 @@ open System.Linq
 let apiKey = @"AIzaSyAUA6Pt5n4IyMlAc-5r2SM0SCuEUDHVsVg"
 type freebaseDataProvider = FreebaseDataProvider<Key=apiKey>
 type hero = {Name:string; Gender:string list; Powers:string list}
+type power = 
+    {
+        Power : string
+        Gender : string
+        Count : int } 
+
 [<EntryPoint>]
 let main argv = 
     let watch = System.Diagnostics.Stopwatch.StartNew()
@@ -72,6 +78,7 @@ let main argv =
     System.Console.Clear()
     printfn "Top Ten Super Powers for men\r\n"
     for p in topTenPowersByCountForMen do
+        let thePower = 
         printfn "Count: %i \tGender: %s \tPower: %s" 
     //(snd(p), fst (p))
 //    for h in heroes do
