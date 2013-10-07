@@ -111,8 +111,12 @@ let main argv =
     System.Console.Clear()
     printfn "Female heroes having the top 5 powers:\r\n\r\n"
     for p in topTenPowersByCountForWomen do
-        let power' = snd p
-        printfn ""
+        let power' = fst p
+        let femaleHeroHavingPower = 
+            femaleHeroes 
+            |> List.filter (fun x -> x.Powers.Contains power')
+            |> List.map (fun (y) -> printfn "%s" y
+
     //(snd(p), fst (p))
     //    for h in heroes do
     //        printfn "%A" h
