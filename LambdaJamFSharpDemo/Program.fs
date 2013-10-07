@@ -89,6 +89,9 @@ let main argv =
         printfn "Count: %i \tPower: %s" (snd p) (fst p)
 
     System.Console.ReadKey() |> ignore
+
+    let womenHavingTopTenPowers = 
+        
     printfn "Slarg"
     printfn "Slarg"
     //(snd(p), fst (p))
