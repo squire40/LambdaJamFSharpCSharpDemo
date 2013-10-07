@@ -8,8 +8,8 @@ type freebaseDataProvider = FreebaseDataProvider<Key=apiKey>
 type hero = {Name:string; Gender:string list; Powers:string list}
 type power = 
     {
-        Power : string
-        Gender : string
+        Power : string;
+        Gender : string;
         Count : int } 
 
 [<EntryPoint>]
@@ -77,9 +77,20 @@ let main argv =
     System.Console.ReadKey() |> ignore
     System.Console.Clear()
     printfn "Top Ten Super Powers for men\r\n"
+    System.Console.ReadKey() |> ignore
     for p in topTenPowersByCountForMen do
-        let thePower = 
-        printfn "Count: %i \tGender: %s \tPower: %s" 
+        printfn "Count: %i \tPower: %s" (snd p) (fst p)
+
+    System.Console.ReadKey() |> ignore
+    System.Console.Clear()
+    printfn "Top Ten Super Powers for women\r\n"
+    System.Console.ReadKey() |> ignore
+    for p in topTenPowersByCountForWomen do
+        printfn "Count: %i \tPower: %s" (snd p) (fst p)
+
+    System.Console.ReadKey() |> ignore
+    printfn "Slarg"
+    printfn "Slarg"
     //(snd(p), fst (p))
 //    for h in heroes do
 //        printfn "%A" h
@@ -100,5 +111,5 @@ let main argv =
 //        System.Console.WriteLine "%A" p
 //        printfn "%A" p
 
-    let input = System.Console.ReadKey
+    System.Console.ReadKey() |> ignore
     0 // return an integer exit code
