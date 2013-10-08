@@ -111,7 +111,7 @@ let main argv =
     System.Console.Clear()
     printfn "Female heroes having the top 5 powers:\r\n\r\n"
 
-     let printHerosHavingPowerList (powersList:(string*int) list) (heroesList : hero list) =
+    let printHerosHavingPowerList (powersList:(string*int) list) (heroesList : hero list) =
         for p in powersList |> Seq.take 5 do
             let power' = fst p
             let hlist = 
