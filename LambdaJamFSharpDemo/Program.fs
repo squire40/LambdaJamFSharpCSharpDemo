@@ -110,12 +110,12 @@ let main argv =
     System.Console.ReadKey() |> ignore
     System.Console.Clear()
     printfn "Female heroes having the top 5 powers:\r\n\r\n"
-
-    let printHerosHavingPowerList (powersList:(string*int) list) (heroesList : hero list) =
+    let printHerosHavingPowerList (powersList : (string * int) list) 
+        (heroesList : hero list) = 
         for p in powersList |> Seq.take 5 do
             let power' = fst p
             let hlist = 
-                herosList |> List.filter (fun x -> x.Powers.Contains power')
+                heroesList |> List.filter (fun x -> x.Powers.Contains power')
             for i in 0..hlist.Length do
                 printfn "%A" (hlist.Item(i).Name)
                 if i % 15 = 0 then 
@@ -124,8 +124,7 @@ let main argv =
                     System.Console.Clear()
     //        |> ignore
     //    printfn ""
-    printHerosHavingPowerList (topTenPowersByCountForWomen femaleHeroes)
-
+    printHerosHavingPowerList topTenPowersByCountForWomen femaleHeroes
     System.Console.ReadKey() |> ignore
     0 // return an integer exit code
       
