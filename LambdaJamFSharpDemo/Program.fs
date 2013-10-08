@@ -110,13 +110,18 @@ let main argv =
     System.Console.ReadKey() |> ignore
     System.Console.Clear()
     printfn "Female heroes having the top 5 powers:\r\n\r\n"
-    for p in topTenPowersByCountForWomen do
-        let power' = fst p
-        let femaleHeroHavingPower = 
-            femaleHeroes 
+    let printHerosHavingPowerList powersList herosList acc = 
+        for p in powersList |> Seq.take 5 do
+            let power' = fst p
+            herosList 
             |> List.filter (fun x -> x.Powers.Contains power')
-            |> List.map (fun (y) -> printfn "%s" y
+            |> List.map (fun (y) -> printfn "%s" y.Name)
+            |> ignore
+            acc + 1
+        ignore
 
+
+    System.Console.ReadKey() |> ignore
     //(snd(p), fst (p))
     //    for h in heroes do
     //        printfn "%A" h
