@@ -110,33 +110,22 @@ let main argv =
     System.Console.ReadKey() |> ignore
     System.Console.Clear()
     printfn "Female heroes having the top 5 powers:\r\n\r\n"
-    let printHerosHavingPowerList powersList herosList acc = 
+
+    let printHerosHavingPowerList (powersList : (string * int) list) (herosList) = 
         for p in powersList |> Seq.take 5 do
             let power' = fst p
-            herosList 
-            |> List.filter (fun x -> x.Powers.Contains power')
-            |> List.map (fun (y) -> printfn "%s" y.Name)
-            |> ignore
-            acc + 1
-        ignore
+            let hlist = 
+                herosList |> List.filter (fun x -> x.Powers.Contains power')
+            for i in 0..hlist.Length do
+                printfn "%A" (hlist.Item(i).Name)
+                if i % 15 = 0 then 
+                    printfn "\r\nPress any key...\r\n"
+                    System.Console.ReadKey() |> ignore
+                    System.Console.Clear()
+    //        |> ignore
+    //    printfn ""
+    printHerosHavingPowerList (topTenPowersByCountForWomen femaleHeroes)
 
-
-    System.Console.ReadKey() |> ignore
-    //(snd(p), fst (p))
-    //    for h in heroes do
-    //        printfn "%A" h
-    //    let heroList = heroes |> Seq.toList
-    //    let heroesWithPowers = query { for h in heroes do
-    //                                    where (not (h.``Powers or Abilities``.Equals"")) }
-    //                                    |> Seq.toList
-    //    let powers = query { for p in heroes do
-    //                            select p.``Powers or Abilities`` }
-    ////                            |> Seq.toList
-    //    let doOutput = (fun s -> Seq.iter |> System.Console.WriteLine s)
-    //    doOutput powers
-    //    for p in powers do
-    //        System.Console.WriteLine "%A" p
-    //        printfn "%A" p
     System.Console.ReadKey() |> ignore
     0 // return an integer exit code
       
