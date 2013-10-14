@@ -117,19 +117,19 @@ let main argv =
                 |> List.sortBy (fun y -> y.Name)
             printfn "Power: %s\r\n" power'
             for i in 0..hlist.Length - 1 do
-                printfn "%s" (hlist.Item(i).Name)
                 if i > 0 && i % 15 = 0 then 
                     printfn "\r\nPress any key...\r\n"
                     System.Console.ReadKey() |> ignore
                     System.Console.Clear()
                     printfn "Power: %s\r\n" power'
+                printfn "%s" (hlist.Item(i).Name)
             System.Console.ReadKey() |> ignore
             System.Console.Clear()
         System.Console.ReadKey |> ignore
         System.Console.Clear |> ignore
-    printfn "Female heroes having the top 5 powers:\r\n\r\n"
+    printfn "Female heroes having the top 5 powers:\r\n"
     printHerosHavingPowerList topTenPowersByCountForWomen femaleHeroes
-    printfn "Male heroes having the top 5 powers:\r\n\r\n"
+    printfn "Male heroes having the top 5 powers:\r\n"
     printHerosHavingPowerList topTenPowersByCountForMen maleHeroes
     System.Console.ReadKey() |> ignore
     0 // return an integer exit code
