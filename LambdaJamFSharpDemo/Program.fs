@@ -35,9 +35,9 @@ let main argv =
         marvel.Characters
         |> Seq.filter (fun x -> x.``Powers or Abilities``.Any())
         |> Seq.toList
-    
+
     let heroesWithPowers = 
-        heroes |> List.map (fun y -> 
+        heroes  |> List.map (fun y -> 
                       { Name = y.Name
                         Gender = 
                             y.Gender
@@ -47,7 +47,6 @@ let main argv =
                             y.``Powers or Abilities``
                             |> Seq.map string
                             |> Seq.toList })
-                |> List.sortBy(fun z -> z.Name)
 
     let maleHeroes = 
         heroesWithPowers |> List.filter (fun i -> i.Gender.Contains("Male"))
@@ -59,7 +58,7 @@ let main argv =
         heroes
         |> Seq.collect (fun y -> y.``Powers or Abilities``)
         |> Seq.distinctBy (fun x -> x.Name)
-        |> Seq.sortBy (fun z -> z.Name)
+//        |> Seq.sortBy (fun z -> z.Name)
         |> Seq.map (fun x' -> x'.Name)
         |> Seq.toList
     
@@ -115,7 +114,7 @@ let main argv =
             let hlist = 
                 heroesList
                 |> List.filter (fun x -> x.Powers.Contains power')
-                |> List.sortBy (fun y -> y.Name)
+                |> List.sortBy (fun y -> y.Name.ToLower())
             printfn "Power: %s\r\n" power'
             for i in 0..hlist.Length - 1 do
                 if i > 0 && i % 15 = 0 then 
