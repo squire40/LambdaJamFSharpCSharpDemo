@@ -98,33 +98,39 @@ let main argv =
     System.Console.ReadKey() |> ignore
     System.Console.Clear()
     printfn "Top Ten Super Powers for men\r\n"
-    System.Console.ReadKey() |> ignore
     for p in topTenPowersByCountForMen do
         printfn "Count: %i \tPower: %s" (snd p) (fst p)
     System.Console.ReadKey() |> ignore
     System.Console.Clear()
     printfn "Top Ten Super Powers for women\r\n"
-    System.Console.ReadKey() |> ignore
     for p in topTenPowersByCountForWomen do
         printfn "Count: %i \tPower: %s" (snd p) (fst p)
     System.Console.ReadKey() |> ignore
     System.Console.Clear()
-    printfn "Female heroes having the top 5 powers:\r\n\r\n"
     let printHerosHavingPowerList (powersList : (string * int) list) 
         (heroesList : hero list) = 
         for p in powersList |> Seq.take 5 do
             let power' = fst p
             let hlist = 
-                heroesList |> List.filter (fun x -> x.Powers.Contains power')
-            for i in 0..hlist.Length do
-                printfn "%A" (hlist.Item(i).Name)
-                if i % 15 = 0 then 
+                heroesList
+                |> List.filter (fun x -> x.Powers.Contains power')
+                |> List.sortBy (fun y -> y.Name)
+            printfn "Power: %s\r\n" power'
+            for i in 0..hlist.Length - 1 do
+                printfn "%s" (hlist.Item(i).Name)
+                if i > 0 && i % 15 = 0 then 
                     printfn "\r\nPress any key...\r\n"
                     System.Console.ReadKey() |> ignore
                     System.Console.Clear()
-    //        |> ignore
-    //    printfn ""
+                    printfn "Power: %s\r\n" power'
+            System.Console.ReadKey() |> ignore
+            System.Console.Clear()
+        System.Console.ReadKey |> ignore
+        System.Console.Clear |> ignore
+    printfn "Female heroes having the top 5 powers:\r\n\r\n"
     printHerosHavingPowerList topTenPowersByCountForWomen femaleHeroes
+    printfn "Male heroes having the top 5 powers:\r\n\r\n"
+    printHerosHavingPowerList topTenPowersByCountForMen maleHeroes
     System.Console.ReadKey() |> ignore
     0 // return an integer exit code
       
