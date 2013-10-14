@@ -106,24 +106,24 @@ let main argv =
     
     let printHerosHavingPowerList (powersList : (string * int) list) 
         (heroesList : hero list) = 
-        for p in powersList |> Seq.take 5 do
-            let power' = fst p
-            let hlist = 
-                heroesList
-                |> List.filter (fun x -> x.Powers.Contains power')
-                |> List.sortBy (fun y -> y.Name.ToLower())
-            printfn "Power: %s\r\n" power'
-            for i in 0..hlist.Length - 1 do
-                if i > 0 && i % 15 = 0 then 
-                    printfn "\r\nPress any key...\r\n"
+        powersList |> Seq.take 5 |> Seq.iter (fun p -> 
+                let power' = fst p 
+                let hlist = 
+                    heroesList
+                    |> List.filter (fun x -> x.Powers.Contains power')
+                    |> List.sortBy (fun y -> y.Name.ToLower())
+                printfn "Power: %s\r\n" power'
+                for i in 0..hlist.Length - 1 do
+                    if i > 0 && i % 15 = 0 then 
+                        printfn "\r\nPress any key...\r\n"
+                        System.Console.ReadKey() |> ignore
+                        System.Console.Clear()
+                        printfn "Power: %s\r\n" power'
+                    printfn "%s" (hlist.Item(i).Name)
                     System.Console.ReadKey() |> ignore
                     System.Console.Clear()
-                    printfn "Power: %s\r\n" power'
-                printfn "%s" (hlist.Item(i).Name)
-            System.Console.ReadKey() |> ignore
-            System.Console.Clear()
-        System.Console.ReadKey |> ignore
-        System.Console.Clear |> ignore
+                System.Console.ReadKey |> ignore
+                System.Console.Clear |> ignore)
 
     printfn "Female heroes having the top 5 powers:\r\n"
     printHerosHavingPowerList topTenPowersByCountForWomen femaleHeroes
