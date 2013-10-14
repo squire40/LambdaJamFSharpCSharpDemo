@@ -164,7 +164,7 @@ namespace LambdaJamFSharpCSharpDemo
             Console.WriteLine();
             foreach (var r in topTenPowersByCountForMen)
             {
-                Console.WriteLine(string.Format("Count: {0} \tGender: {1} \tPower: {2}", r.Count, r.Gender, r.Power));
+                Console.WriteLine(string.Format("Count: {0} \tPower: {1}", r.Count, r.Power));
             }
             Console.ReadKey();
             Console.Clear();
@@ -172,7 +172,7 @@ namespace LambdaJamFSharpCSharpDemo
             Console.WriteLine();
             foreach (var r in topTenPowersByCountForWomen)
             {
-                Console.WriteLine(string.Format("Count: {0} \tGender: {1} \tPower: {2}", r.Count, r.Gender, r.Power));
+                Console.WriteLine(string.Format("Count: {0} \tPower: {1}", r.Count, r.Power));
             }
 
             Console.ReadKey();

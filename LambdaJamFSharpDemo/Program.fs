@@ -81,6 +81,13 @@ let main argv =
     let topTenPowersByCountForMen = maleHeroes |> topTenPowers
     let topTenPowersByCountForWomen = femaleHeroes |> topTenPowers
     watch.Stop()
+
+    //TODO: Refactor for in |> List.iter
+    let doPowersOutput hlist = 
+        (topTenPowers hlist) |> List.iter (fun p -> printfn "Count: %i \tPower: %s" (snd p) (fst p))
+        System.Console.ReadKey() |> ignore
+        System.Console.Clear()
+
     System.Console.WriteLine
         (System.String.Format
              ("Time to get and slice data: {0} minutes, {1} seconds, {2} milliseconds", 
@@ -88,25 +95,15 @@ let main argv =
               watch.Elapsed.Milliseconds))
     System.Console.ReadKey() |> ignore
     System.Console.Clear()
-    System.Console.WriteLine
-        (System.String.Format("Total Super Heroes: {0}", heroes.Count()))
-    System.Console.WriteLine()
-    System.Console.WriteLine("Top 10 Super Powers by Count")
-    System.Console.WriteLine()
-    for p in topTenPowers heroesWithPowers do
-        printfn "Count: %i \tPower: %s" (snd p) (fst p)
-    System.Console.ReadKey() |> ignore
-    System.Console.Clear()
+    printfn "Total Super Heroes: %i\r\n" heroes.Length
+    printfn "Top 10 Super Powers by Count\r\n"
+
+    doPowersOutput heroesWithPowers
     printfn "Top Ten Super Powers for men\r\n"
-    for p in topTenPowersByCountForMen do
-        printfn "Count: %i \tPower: %s" (snd p) (fst p)
-    System.Console.ReadKey() |> ignore
-    System.Console.Clear()
+    doPowersOutput maleHeroes
     printfn "Top Ten Super Powers for women\r\n"
-    for p in topTenPowersByCountForWomen do
-        printfn "Count: %i \tPower: %s" (snd p) (fst p)
-    System.Console.ReadKey() |> ignore
-    System.Console.Clear()
+    doPowersOutput femaleHeroes
+    
     let printHerosHavingPowerList (powersList : (string * int) list) 
         (heroesList : hero list) = 
         for p in powersList |> Seq.take 5 do
@@ -127,10 +124,12 @@ let main argv =
             System.Console.Clear()
         System.Console.ReadKey |> ignore
         System.Console.Clear |> ignore
+
     printfn "Female heroes having the top 5 powers:\r\n"
     printHerosHavingPowerList topTenPowersByCountForWomen femaleHeroes
     printfn "Male heroes having the top 5 powers:\r\n"
     printHerosHavingPowerList topTenPowersByCountForMen maleHeroes
+    
     System.Console.ReadKey() |> ignore
     0 // return an integer exit code
       
