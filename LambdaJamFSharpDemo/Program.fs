@@ -47,7 +47,8 @@ let main argv =
                             y.``Powers or Abilities``
                             |> Seq.map string
                             |> Seq.toList })
-    
+                |> List.sortBy(fun z -> z.Name)
+
     let maleHeroes = 
         heroesWithPowers |> List.filter (fun i -> i.Gender.Contains("Male"))
     let femaleHeroes = 
