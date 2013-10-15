@@ -106,7 +106,9 @@ let main argv =
     
     let printHerosHavingPowerList (powersList : (string * int) list) 
         (heroesList : hero list) = 
-        powersList |> Seq.take 5 |> Seq.iter (fun p -> 
+        powersList |> Seq.take 5 
+        |> Seq.iter 
+            (fun p -> 
                 let power' = fst p 
                 let hlist = 
                     heroesList
@@ -120,8 +122,9 @@ let main argv =
                         System.Console.Clear()
                         printfn "Power: %s\r\n" power'
                     printfn "%s" (hlist.Item(i).Name)
-                    System.Console.ReadKey() |> ignore
-                    System.Console.Clear()
+                System.Console.ReadKey() |> ignore
+                System.Console.Clear()
+
                 System.Console.ReadKey |> ignore
                 System.Console.Clear |> ignore)
 
