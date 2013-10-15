@@ -128,6 +128,5 @@ let main argv =
     printHerosHavingPowerList topTenPowersByCountForWomen femaleHeroes
     printfn "Male heroes having the top 5 powers:\r\n"
     printHerosHavingPowerList topTenPowersByCountForMen maleHeroes
-    System.Console.ReadKey() |> ignore
     0 // return an integer exit code
       
